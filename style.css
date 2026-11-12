@@ -183,7 +183,6 @@ body {
 .hero-imagem {
     flex: 1;
     width: 50%;
-    background: transparent
     min-width: 0;
     height: 540px;
     display: flex;
