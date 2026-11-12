@@ -1,6 +1,6 @@
 
-/* CONFIGURAÇÕES GERAIS */
 
+/* CONFIGURAÇÕES GERAIS */
 * {
     margin: 0;
     padding: 0;
@@ -31,15 +31,12 @@ body {
     --branco: #fffefa;
 }
 
-
 /* CABEÇALHO */
-
 .cabecalho {
     width: 100%;
-   background: #f0f5f9;
+    background: #f0f5f9;
     position: sticky;
     top: 0;
-
     z-index: 10;
     border-bottom: 1px solid #f1eee8;
 }
@@ -106,9 +103,7 @@ body {
     display: none;
 }
 
-
 /* BANNER PRINCIPAL */
-
 .hero {
     min-height: 540px;
     background: linear-gradient(90deg, #fffefa 35%, #f4f4f0 100%);
@@ -120,10 +115,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 30px;
 }
 
 .hero-texto {
+    flex: 1;
     width: 50%;
+    min-width: 0;
     padding: 65px 0;
     position: relative;
     z-index: 2;
@@ -183,23 +181,27 @@ body {
 }
 
 .hero-imagem {
+    flex: 1;
     width: 50%;
+    background: transparent
+    min-width: 0;
     height: 540px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .hero-imagem img {
+    display: block;
     width: 100%;
     height: 100%;
+    max-width: 100%;
     object-fit: contain;
-    object-position: bottom center;
+    object-position: center;
 }
 
-
 /* ESPECIALIDADES */
-
 .especialidades {
     background: #fffefa;
     padding: 45px 0;
@@ -239,9 +241,7 @@ body {
     color: var(--azul);
 }
 
-
 /* SOBRE MIM */
-
 .sobre {
     padding: 85px 0;
     background: #f9f9f6;
@@ -291,9 +291,7 @@ body {
     line-height: 1.8;
 }
 
-
 /* RESULTADOS - ANTES E DEPOIS */
-
 .resultados {
     padding: 85px 0;
     background: #f9f9f6;
@@ -302,8 +300,6 @@ body {
 .resultados-titulo {
     margin-bottom: 40px;
 }
-
-/* ESTRUTURA DO CARROSSEL */
 
 .carrossel-resultados {
     display: flex;
@@ -319,20 +315,14 @@ body {
 
 .resultados-trilho {
     display: flex;
+    align-items: stretch;
+    gap: 24px;
     transition: transform 0.5s ease;
+    will-change: transform;
 }
-
-.resultados-pagina {
-    flex: 0 0 100%;
-    min-width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 25px;
-}
-
-/* CARTÕES DOS RESULTADOS */
 
 .card-resultado {
+    flex: 0 0 calc((100% - 48px) / 3);
     min-width: 0;
     padding: 18px;
     background: #fffefa;
@@ -349,6 +339,8 @@ body {
 
 .foto-resultado {
     min-width: 0;
+    width: 100%;
+    overflow: hidden;
 }
 
 .foto-resultado > span {
@@ -358,6 +350,16 @@ body {
     font-weight: 800;
     letter-spacing: 2px;
     margin-bottom: 9px;
+}
+
+.foto-resultado img {
+    display: block;
+    width: 100%;
+    height: 230px;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 8px;
+    background: #f5f5f5;
 }
 
 .imagem-placeholder {
@@ -390,8 +392,6 @@ body {
     line-height: 1.6;
 }
 
-/* SETAS DO CARROSSEL */
-
 .seta-resultados {
     flex-shrink: 0;
     width: 43px;
@@ -419,9 +419,7 @@ body {
     cursor: not-allowed;
 }
 
-
 /* TÍTULOS DAS SEÇÕES */
-
 .titulo-secao {
     margin-bottom: 35px;
 }
@@ -441,9 +439,7 @@ body {
     font-size: 17px;
 }
 
-
-/* NOSSO ESPAÇO - DOIS CARROSSÉIS INDEPENDENTES */
-
+/* NOSSO ESPAÇO */
 .estrutura {
     padding: 85px 0;
     background: var(--branco);
@@ -503,12 +499,18 @@ body {
     background: #e8edf2;
 }
 
+/* ESCONDE AS FOTOS QUE NÃO ESTÃO ATIVAS */
 .estrutura-janela img {
-    display: block;
+    display: none;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: opacity 0.25s ease;
+}
+
+/* MOSTRA SOMENTE A FOTO ATUAL */
+.estrutura-janela img.ativa {
+    display: block;
 }
 
 .seta-estrutura {
@@ -553,9 +555,7 @@ body {
     font-size: 12px;
 }
 
-
 /* CONSULTÓRIOS */
-
 .consultorios {
     padding: 80px 0 65px;
     background: var(--branco);
@@ -648,9 +648,7 @@ body {
     object-fit: cover;
 }
 
-
 /* RODAPÉ */
-
 .rodape {
     padding: 45px 0;
     text-align: center;
@@ -685,11 +683,8 @@ body {
     font-size: 13px;
 }
 
-
 /* RESPONSIVIDADE - NOTEBOOKS E TABLETS */
-
-@media (max-width: 850px) {
-
+@media (max-width: 1200px) {
     .menu {
         gap: 20px;
     }
@@ -716,17 +711,21 @@ body {
     }
 
     /* RESULTADOS */
-
-    .resultados-pagina {
+    .resultados-trilho {
         gap: 15px;
     }
 
     .card-resultado {
+        flex-basis: calc((100% - 15px) / 2);
         padding: 12px;
     }
 
     .comparacao {
         gap: 8px;
+    }
+
+    .foto-resultado img {
+        height: 190px;
     }
 
     .resultado-descricao h3 {
@@ -738,7 +737,6 @@ body {
     }
 
     /* NOSSO ESPAÇO */
-
     .estrutura-grid {
         gap: 18px;
     }
@@ -760,20 +758,15 @@ body {
         height: 35px;
         font-size: 25px;
     }
-
 }
 
-
 /* RESPONSIVIDADE - CELULARES */
-
-@media (max-width: 600px) {
-
+@media (max-width: 850px) {
     .container {
         width: 90%;
     }
 
     /* MENU MOBILE */
-
     .navegacao {
         min-height: 80px;
     }
@@ -826,9 +819,7 @@ body {
         display: flex;
     }
 
-
     /* BANNER MOBILE */
-
     .hero {
         min-height: auto;
     }
@@ -836,6 +827,7 @@ body {
     .hero-conteudo {
         flex-direction: column;
         min-height: auto;
+        gap: 0;
     }
 
     .hero-texto {
@@ -857,9 +849,7 @@ body {
         height: 350px;
     }
 
-
     /* ESPECIALIDADES */
-
     .especialidade {
         padding: 30px 0;
     }
@@ -877,9 +867,7 @@ body {
         font-size: 16px;
     }
 
-
     /* SOBRE MIM MOBILE */
-
     .sobre {
         padding: 60px 0;
     }
@@ -935,9 +923,7 @@ body {
         font-size: 15px;
     }
 
-
     /* RESULTADOS MOBILE */
-
     .resultados {
         padding: 60px 0;
     }
@@ -950,26 +936,29 @@ body {
         gap: 8px;
     }
 
-    /* MOSTRA SOMENTE UMA CAIXA NO CELULAR */
-
-    .resultados-pagina {
-        grid-template-columns: 1fr;
-    }
-
-    .card-resultado:nth-child(2) {
-        display: none;
+    .resultados-trilho {
+        gap: 0;
     }
 
     .card-resultado {
+        flex: 0 0 100%;
         width: 100%;
         padding: 12px;
     }
 
-    /* ANTES E DEPOIS PERMANECEM LADO A LADO */
+    /* NO CELULAR, MOSTRA OS 4 PRIMEIROS TRATAMENTOS */
+    .card-resultado:nth-child(n + 5) {
+        display: none;
+    }
 
     .comparacao {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
+    }
+
+    .foto-resultado img {
+        height: 180px;
+        object-fit: contain;
     }
 
     .imagem-placeholder {
@@ -982,9 +971,7 @@ body {
         font-size: 25px;
     }
 
-
     /* NOSSO ESPAÇO MOBILE */
-
     .estrutura {
         padding: 60px 0;
     }
@@ -1020,9 +1007,7 @@ body {
         font-size: 24px;
     }
 
-
     /* CONSULTÓRIOS */
-
     .consultorios {
         padding: 60px 0 45px;
     }
@@ -1055,5 +1040,4 @@ body {
     .card-texto a {
         font-size: 12px;
     }
-
 }

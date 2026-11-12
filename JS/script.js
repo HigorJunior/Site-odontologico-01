@@ -1,326 +1,309 @@
-   
+ 
+
 /* MENU MOBILE */
 
 const botaoMenu = document.querySelector('.menu-mobile');
 const menu = document.querySelector('.menu');
 
-// ABRIR E FECHAR MENU MOBILE
-
 if (botaoMenu && menu) {
-
     botaoMenu.addEventListener('click', () => {
         menu.classList.toggle('ativo');
     });
-
 }
 
-
-// FECHAR MENU AO CLICAR EM UM LINK
+/* FECHAR MENU AO CLICAR EM UM LINK */
 
 const linksMenu = document.querySelectorAll('.menu a');
 
 linksMenu.forEach(link => {
-
     link.addEventListener('click', () => {
-
         if (menu) {
             menu.classList.remove('ativo');
         }
-
     });
-
 });
-
 
 
 /* CARROSSEL DE RESULTADOS */
 
 const trilhoResultados = document.querySelector('.resultados-trilho');
-
-const paginasResultados = document.querySelectorAll('.resultados-pagina');
-
+const janelaResultados = document.querySelector('.resultados-janela');
+const cardsResultados = document.querySelectorAll('.card-resultado');
 const setaAnterior = document.querySelector('.seta-anterior');
-
 const setaProxima = document.querySelector('.seta-proxima');
 
 let paginaAtual = 0;
-
-
-// ATUALIZAR POSIÇÃO DO CARROSSEL
+let quantidadePorPagina = 3;
 
 function atualizarCarrossel() {
-
-    if (!trilhoResultados || paginasResultados.length === 0) {
+    if (!trilhoResultados || !janelaResultados || cardsResultados.length === 0) {
         return;
     }
 
-    trilhoResultados.style.transform =
-        `translateX(-${paginaAtual * 100}%)`;
+    const celular = window.innerWidth <= 600;
 
+    quantidadePorPagina = celular ? 1 : 3;
 
-    // DESATIVAR SETA ANTERIOR NA PRIMEIRA PÁGINA
+    const totalCards = celular
+        ? Math.min(cardsResultados.length, 4)
+        : cardsResultados.length;
+
+    const totalPaginas = Math.ceil(totalCards / quantidadePorPagina);
+
+    if (paginaAtual >= totalPaginas) {
+        paginaAtual = totalPaginas - 1;
+    }
+
+    if (paginaAtual < 0) {
+        paginaAtual = 0;
+    }
+
+    const primeiroCard = cardsResultados[0];
+    const larguraCard = primeiroCard.getBoundingClientRect().width;
+
+    const estilosTrilho = window.getComputedStyle(trilhoResultados);
+    const espacamento = parseFloat(estilosTrilho.columnGap) || 0;
+
+    const deslocamento = paginaAtual * quantidadePorPagina * (larguraCard + espacamento);
+
+    trilhoResultados.style.transform = `translateX(-${deslocamento}px)`;
 
     if (setaAnterior) {
         setaAnterior.disabled = paginaAtual === 0;
     }
 
-
-    // DESATIVAR SETA PRÓXIMA NA ÚLTIMA PÁGINA
-
     if (setaProxima) {
-        setaProxima.disabled =
-            paginaAtual === paginasResultados.length - 1;
+        setaProxima.disabled = paginaAtual >= totalPaginas - 1;
     }
-
 }
 
-
-// VOLTAR PARA O CONJUNTO ANTERIOR
+/* VOLTAR PARA O CONJUNTO ANTERIOR */
 
 if (setaAnterior) {
-
     setaAnterior.addEventListener('click', () => {
-
         if (paginaAtual > 0) {
-
             paginaAtual--;
-
             atualizarCarrossel();
-
         }
-
     });
-
 }
 
-
-// AVANÇAR PARA O PRÓXIMO CONJUNTO
+/* AVANÇAR PARA O PRÓXIMO CONJUNTO */
 
 if (setaProxima) {
-
     setaProxima.addEventListener('click', () => {
+        const celular = window.innerWidth <= 600;
 
-        if (paginaAtual < paginasResultados.length - 1) {
+        const totalCards = celular
+            ? Math.min(cardsResultados.length, 4)
+            : cardsResultados.length;
 
+        const totalPaginas = Math.ceil(totalCards / quantidadePorPagina);
+
+        if (paginaAtual < totalPaginas - 1) {
             paginaAtual++;
-
             atualizarCarrossel();
-
         }
-
     });
-
 }
 
+/* AJUSTAR CARROSSEL AO REDIMENSIONAR A TELA */
 
-// INICIAR CARROSSEL
+window.addEventListener('resize', () => {
+    paginaAtual = 0;
+    atualizarCarrossel();
+});
+
+/* INICIAR CARROSSEL */
 
 atualizarCarrossel();
 
 
-
 /* CARROSSEL DE SANTA MARGARIDA */
 
-// FOTOS DE SANTA MARGARIDA
+/* DESCRIÇÕES DAS TRÊS FOTOS */
 
-const fotosSantaMargarida = [
-
-    {
-        imagem: 'img/ChatGPT Image 16 de out. de 2026, 19_45_02.jpg',
-        descricao: 'Consultório'
-    },
-
-    {
-        imagem: 'img/santa-margarida-recepcao.jpg',
-        descricao: 'Recepção'
-    },
-
-    {
-        imagem: 'img/santa-margarida-fachada.jpg',
-        descricao: 'Fachada'
-    }
-
+const descricoesSanta = [
+    'Consultório',
+    'Recepção',
+    'Fachada'
 ];
 
+/* BUSCAR AS TRÊS IMAGENS DO HTML */
 
-// ELEMENTOS DO CARROSSEL DE SANTA MARGARIDA
-
-const imagemSanta = document.querySelector('.foto-santa');
+const imagensSanta = document.querySelectorAll('.foto-santa');
 
 const legendaSanta = document.querySelector('.legenda-santa');
-
 const contadorSanta = document.querySelector('.contador-santa');
 
 const setaSantaAnterior = document.querySelector('.seta-santa-anterior');
-
 const setaSantaProxima = document.querySelector('.seta-santa-proxima');
 
 let indiceSanta = 0;
 
-
-// ATUALIZAR FOTO DE SANTA MARGARIDA
-
 function atualizarSantaMargarida() {
 
-    if (!imagemSanta) {
+    if (imagensSanta.length === 0) {
         return;
     }
 
-    const fotoAtual = fotosSantaMargarida[indiceSanta];
+    /* ESCONDER TODAS AS FOTOS */
 
-    imagemSanta.src = fotoAtual.imagem;
-    imagemSanta.alt = `${fotoAtual.descricao} de Santa Margarida`;
+    imagensSanta.forEach(imagem => {
+        imagem.classList.remove('ativa');
+    });
 
-    legendaSanta.textContent = fotoAtual.descricao;
+    /* MOSTRAR SOMENTE A FOTO ATUAL */
 
-    contadorSanta.textContent =
-        `${indiceSanta + 1} / ${fotosSantaMargarida.length}`;
+    const fotoAtual = imagensSanta[indiceSanta];
 
+    fotoAtual.classList.add('ativa');
+
+    /* ATUALIZAR TEXTO ALTERNATIVO */
+
+    const descricaoAtual = descricoesSanta[indiceSanta] || 'Consultório';
+
+    fotoAtual.alt = `${descricaoAtual} de Santa Margarida`;
+
+    /* ATUALIZAR LEGENDA */
+
+    if (legendaSanta) {
+        legendaSanta.textContent = descricaoAtual;
+    }
+
+    /* ATUALIZAR CONTADOR */
+
+    if (contadorSanta) {
+        contadorSanta.textContent =
+            `${indiceSanta + 1} / ${imagensSanta.length}`;
+    }
 }
 
-
-// FOTO ANTERIOR DE SANTA MARGARIDA
+/* FOTO ANTERIOR DE SANTA MARGARIDA */
 
 if (setaSantaAnterior) {
-
     setaSantaAnterior.addEventListener('click', () => {
 
         indiceSanta--;
 
         if (indiceSanta < 0) {
-            indiceSanta = fotosSantaMargarida.length - 1;
+            indiceSanta = imagensSanta.length - 1;
         }
 
         atualizarSantaMargarida();
-
     });
-
 }
 
-
-// PRÓXIMA FOTO DE SANTA MARGARIDA
+/* PRÓXIMA FOTO DE SANTA MARGARIDA */
 
 if (setaSantaProxima) {
-
     setaSantaProxima.addEventListener('click', () => {
 
         indiceSanta++;
 
-        if (indiceSanta >= fotosSantaMargarida.length) {
+        if (indiceSanta >= imagensSanta.length) {
             indiceSanta = 0;
         }
 
         atualizarSantaMargarida();
-
     });
-
 }
 
-
-// INICIAR SANTA MARGARIDA
+/* INICIAR SANTA MARGARIDA */
 
 atualizarSantaMargarida();
 
 
-
 /* CARROSSEL DE ORIZÂNIA */
 
-// FOTOS DE ORIZÂNIA
+/* DESCRIÇÕES DAS TRÊS FOTOS */
 
-const fotosOrizania = [
-
-    {
-        imagem: 'img/ChatGPT Image 16 de out. de 2026, 19_45_02.jpg',
-        descricao: 'Consultório'
-    },
-
-    {
-        imagem: 'img/or izania-fachada.jpg',
-        descricao: 'Fachada'
-    },
-
-    {
-        imagem: 'img/or izania-recepcao.jpg',
-        descricao: 'Recepção'
-    }
-
+const descricoesOrizania = [
+    'Consultório',
+    'Fachada',
+    'Recepção'
 ];
 
+/* BUSCAR AS TRÊS IMAGENS DO HTML */
 
-// ELEMENTOS DO CARROSSEL DE ORIZÂNIA
-
-const imagemOrizania = document.querySelector('.foto-orizania');
+const imagensOrizania = document.querySelectorAll('.foto-orizania');
 
 const legendaOrizania = document.querySelector('.legenda-orizania');
-
 const contadorOrizania = document.querySelector('.contador-orizania');
 
 const setaOrizaniaAnterior = document.querySelector('.seta-orizania-anterior');
-
 const setaOrizaniaProxima = document.querySelector('.seta-orizania-proxima');
 
 let indiceOrizania = 0;
 
-
-// ATUALIZAR FOTO DE ORIZÂNIA
-
 function atualizarOrizania() {
 
-    if (!imagemOrizania) {
+    if (imagensOrizania.length === 0) {
         return;
     }
 
-    const fotoAtual = fotosOrizania[indiceOrizania];
+    /* ESCONDER TODAS AS FOTOS */
 
-    imagemOrizania.src = fotoAtual.imagem;
-    imagemOrizania.alt = `${fotoAtual.descricao} de Orizânia`;
+    imagensOrizania.forEach(imagem => {
+        imagem.classList.remove('ativa');
+    });
 
-    legendaOrizania.textContent = fotoAtual.descricao;
+    /* MOSTRAR SOMENTE A FOTO ATUAL */
 
-    contadorOrizania.textContent =
-        `${indiceOrizania + 1} / ${fotosOrizania.length}`;
+    const fotoAtual = imagensOrizania[indiceOrizania];
 
+    fotoAtual.classList.add('ativa');
+
+    /* ATUALIZAR TEXTO ALTERNATIVO */
+
+    const descricaoAtual = descricoesOrizania[indiceOrizania] || 'Consultório';
+
+    fotoAtual.alt = `${descricaoAtual} de Orizânia`;
+
+    /* ATUALIZAR LEGENDA */
+
+    if (legendaOrizania) {
+        legendaOrizania.textContent = descricaoAtual;
+    }
+
+    /* ATUALIZAR CONTADOR */
+
+    if (contadorOrizania) {
+        contadorOrizania.textContent =
+            `${indiceOrizania + 1} / ${imagensOrizania.length}`;
+    }
 }
 
-
-// FOTO ANTERIOR DE ORIZÂNIA
+/* FOTO ANTERIOR DE ORIZÂNIA */
 
 if (setaOrizaniaAnterior) {
-
     setaOrizaniaAnterior.addEventListener('click', () => {
 
         indiceOrizania--;
 
         if (indiceOrizania < 0) {
-            indiceOrizania = fotosOrizania.length - 1;
+            indiceOrizania = imagensOrizania.length - 1;
         }
 
         atualizarOrizania();
-
     });
-
 }
 
-
-// PRÓXIMA FOTO DE ORIZÂNIA
+/* PRÓXIMA FOTO DE ORIZÂNIA */
 
 if (setaOrizaniaProxima) {
-
     setaOrizaniaProxima.addEventListener('click', () => {
 
         indiceOrizania++;
 
-        if (indiceOrizania >= fotosOrizania.length) {
+        if (indiceOrizania >= imagensOrizania.length) {
             indiceOrizania = 0;
         }
 
         atualizarOrizania();
-
     });
-
 }
 
-
-// INICIAR ORIZÂNIA
+/* INICIAR ORIZÂNIA */
 
 atualizarOrizania();
