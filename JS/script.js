@@ -29,29 +29,61 @@ linksMenu.forEach(link => {
 const trilhoResultados = document.querySelector('.resultados-trilho');
 const janelaResultados = document.querySelector('.resultados-janela');
 const cardsResultados = document.querySelectorAll('.card-resultado');
+
 const setaAnterior = document.querySelector('.seta-anterior');
 const setaProxima = document.querySelector('.seta-proxima');
 
 let paginaAtual = 0;
 let quantidadePorPagina = 3;
 
+/* DEFINIR QUANTOS CARTÕES APARECEM POR TELA */
+
+function obterQuantidadePorPagina() {
+    const larguraTela = window.innerWidth;
+
+    if (larguraTela <= 850) {
+        return 1;
+    }
+
+    if (larguraTela <= 1200) {
+        return 2;
+    }
+
+    return 3;
+}
+
+/* CALCULAR QUANTIDADE DE CARTÕES UTILIZADOS */
+
+function obterTotalCards() {
+    if (window.innerWidth <= 850) {
+        return Math.min(cardsResultados.length, 4);
+    }
+
+    return cardsResultados.length;
+}
+
+/* ATUALIZAR CARROSSEL */
+
 function atualizarCarrossel() {
-    if (!trilhoResultados || !janelaResultados || cardsResultados.length === 0) {
+
+    if (
+        !trilhoResultados ||
+        !janelaResultados ||
+        cardsResultados.length === 0
+    ) {
         return;
     }
 
-    const celular = window.innerWidth <= 600;
+    quantidadePorPagina = obterQuantidadePorPagina();
 
-    quantidadePorPagina = celular ? 1 : 3;
+    const totalCards = obterTotalCards();
 
-    const totalCards = celular
-        ? Math.min(cardsResultados.length, 4)
-        : cardsResultados.length;
-
-    const totalPaginas = Math.ceil(totalCards / quantidadePorPagina);
+    const totalPaginas = Math.ceil(
+        totalCards / quantidadePorPagina
+    );
 
     if (paginaAtual >= totalPaginas) {
-        paginaAtual = totalPaginas - 1;
+        paginaAtual = Math.max(0, totalPaginas - 1);
     }
 
     if (paginaAtual < 0) {
@@ -59,14 +91,20 @@ function atualizarCarrossel() {
     }
 
     const primeiroCard = cardsResultados[0];
+
     const larguraCard = primeiroCard.getBoundingClientRect().width;
 
     const estilosTrilho = window.getComputedStyle(trilhoResultados);
+
     const espacamento = parseFloat(estilosTrilho.columnGap) || 0;
 
-    const deslocamento = paginaAtual * quantidadePorPagina * (larguraCard + espacamento);
+    const deslocamento =
+        paginaAtual *
+        quantidadePorPagina *
+        (larguraCard + espacamento);
 
-    trilhoResultados.style.transform = `translateX(-${deslocamento}px)`;
+    trilhoResultados.style.transform =
+        `translateX(-${deslocamento}px)`;
 
     if (setaAnterior) {
         setaAnterior.disabled = paginaAtual === 0;
@@ -81,10 +119,12 @@ function atualizarCarrossel() {
 
 if (setaAnterior) {
     setaAnterior.addEventListener('click', () => {
+
         if (paginaAtual > 0) {
             paginaAtual--;
             atualizarCarrossel();
         }
+
     });
 }
 
@@ -92,18 +132,20 @@ if (setaAnterior) {
 
 if (setaProxima) {
     setaProxima.addEventListener('click', () => {
-        const celular = window.innerWidth <= 600;
 
-        const totalCards = celular
-            ? Math.min(cardsResultados.length, 4)
-            : cardsResultados.length;
+        const quantidade = obterQuantidadePorPagina();
 
-        const totalPaginas = Math.ceil(totalCards / quantidadePorPagina);
+        const totalCards = obterTotalCards();
+
+        const totalPaginas = Math.ceil(
+            totalCards / quantidade
+        );
 
         if (paginaAtual < totalPaginas - 1) {
             paginaAtual++;
             atualizarCarrossel();
         }
+
     });
 }
 
@@ -161,7 +203,8 @@ function atualizarSantaMargarida() {
 
     /* ATUALIZAR TEXTO ALTERNATIVO */
 
-    const descricaoAtual = descricoesSanta[indiceSanta] || 'Consultório';
+    const descricaoAtual =
+        descricoesSanta[indiceSanta] || 'Consultório';
 
     fotoAtual.alt = `${descricaoAtual} de Santa Margarida`;
 
@@ -256,7 +299,8 @@ function atualizarOrizania() {
 
     /* ATUALIZAR TEXTO ALTERNATIVO */
 
-    const descricaoAtual = descricoesOrizania[indiceOrizania] || 'Consultório';
+    const descricaoAtual =
+        descricoesOrizania[indiceOrizania] || 'Consultório';
 
     fotoAtual.alt = `${descricaoAtual} de Orizânia`;
 
